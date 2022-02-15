@@ -1,0 +1,29 @@
+name: Lint, build, release and deploy Airflow DAGs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+    outputs:
+      service_version: ${{ steps.vars.outputs.service_version }}
+    steps:
+    - name: Login
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: cg-prod-platform
+        service_account_email: automation-sa@tools-249011.iam.gserviceaccount.com
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+    - name: Configure Docker
+      run: gcloud auth configure-docker --quiet
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: 'x64'
+    - name: Black Code Formatter
+      uses: lgeiger/black-action@v1.0.1
