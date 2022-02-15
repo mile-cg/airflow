@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    outputs:
-      service_version: ${{ steps.vars.outputs.service_version }}
     steps:
     - name: Login
       uses: google-github-actions/setup-gcloud@v0
